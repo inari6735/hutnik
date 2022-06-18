@@ -19,7 +19,7 @@ services:
       start_period: 30s
     environment:
       # Run "composer require symfony/orm-pack" to install and configure Doctrine ORM
-      DATABASE_URL: postgresql://${POSTGRES_USER:-symfony}:${POSTGRES_PASSWORD:-ChangeMe}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-13}
+      DATABASE_URL: mysql://hutnik:Zaq12wsx@mysql:3306/mydb?serverVersion=8.0.28
       # Run "composer require symfony/mercure-bundle" to install and configure the Mercure integration
       MERCURE_URL: ${CADDY_MERCURE_URL:-http://caddy/.well-known/mercure}
       MERCURE_PUBLIC_URL: https://${SERVER_NAME:-localhost}/.well-known/mercure
@@ -57,6 +57,18 @@ services:
 # Mercure is installed as a Caddy module, prevent the Flex recipe from installing another service
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
+  mysql:
+    platform: linux/x86_64
+    image: mysql
+    restart: always
+    command: --innodb_use_native_aio=0
+    volumes:
+      - ./db/db.sql:/docker-entrypoint-initdb.d/datadump.sql
+    ports:
+      - 3309:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: Zaq12wsx
+      MYSQL_DATABASE: mydb
 
 volumes:
   php_socket:
