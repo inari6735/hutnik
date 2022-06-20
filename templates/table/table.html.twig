@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Strona główna{% endblock %}
+
+{% block body %}
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <link rel="stylesheet" href="{{ asset('css/cover.css') }}">
+        <div class="d-flex row-12 v-100 text-center text-white bg-dark">
+            <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+                <header class="mb-auto">
+                    <div>
+                        {% if app.user %}
+                            <a style="font-size: 1.17em" href="{{ url('app_user') }}" class="float-md-start mb-0 pt-2 text-decoration-none text-white fw-bold">{{ app.user.getFirstName() }} {{ app.user.getLastName() }}</a>
+                        {% endif %}
+
+                        <nav class="nav nav-masthead justify-content-center float-md-end">
+                            <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="{{ url('app_home') }}">Home</a>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a class="nav-link fw-bold py-1 px-0" href="{{ url('app_admin_email') }}">Dostęp</a>
+                            {% endif %}
+                            <a class="nav-link fw-bold py-1 px-0" href="#">Informacje</a>
+                            <a class="nav-link fw-bold py-1 px-0" href="#">Kontakt</a>
+                            <a class="nav-link fw-bold py-1 px-0" href="{{ path('app_logout') }}">Wyloguj się</a>
+                        </nav>
+                    </div>
+                </header>
+
+                <footer class="mt-auto text-white-50">
+                    <p></p>
+                </footer>
+            </div>
+
+        </div>
+        <div class="bg-dark row-12 vw-100">
+            <table class="table text-light">
+                <thead>
+                    `<tr>
+                        <td class="text-center">
+                            Stolik / Miejsce
+                        </td>
+                        <td class="text-center">
+                            1
+                        </td>
+                        <td class="text-center">
+                            2
+                        </td>
+                        <td class="text-center">
+                            3
+                        </td>
+                        <td class="text-center">
+                            4
+                        </td>
+                        <td class="text-center">
+                            5
+                        </td>
+                        <td class="text-center">
+                            6
+                        </td>
+                        <td class="text-center">
+                            7
+                        </td>
+                        <td class="text-center">
+                            8
+                        </td>
+                        <td class="text-center">
+                            9
+                        </td>
+                        <td class="text-center">
+                            10
+                        </td>
+                    </tr>`
+                </thead>
+                <tbody>
+                {% for table in tables %}
+                    <tr>
+                        <td class="text-center">
+                            {{ table.name }}
+                        </td>
+                        {% for reservation in table.getReservations() %}
+                            <td class="text-center">
+                                {% if reservation.getStatusId()[0].colour == 1 %}
+                                    <input type="checkbox" class="btn-check btn-danger" id="{{ reservation.id }}" name="options" disabled>
+                                    <label class="btn btn-warning" for="{{ reservation.id }}">{{ reservation.getStatusId()[0].getName() }}</label>
+                                {% elseif reservation.getStatusId()[0].colour == 3%}
+                                    <input type="checkbox" class="btn-check btn-danger" id="{{ reservation.id }}" name="options" disabled>
+                                    <label class="btn btn-danger" for="{{ reservation.id }}">{{ reservation.getStatusId()[0].getName() }}</label>
+                                {% else %}
+                                    <form action="{{ url('app_make_reservation') }}">
+                                        <input type="submit" class="btn-check btn-danger" value="{{ reservation.id }}" id="{{ reservation.id }}" name="reservation_id" autocomplete="off">
+                                        <label class="btn btn-success" for="{{ reservation.id }}">{{ reservation.getStatusId()[0].getName() }}</label>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}

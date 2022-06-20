@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Logowanie{% endblock %}
+
+{% block body %}
+<form method="post">
+    <!-- Pills content -->
+    <div class="container-fluid align-content-center justify-content-center">
+        <div class="row d-flex justify-content-center align-content-center">
+            <div class="col-6">
+    <div class="tab-content align-content-center">
+        <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
+
+                <div class="container-fluid mt-0 mb-5 justify-content-center align-items-center">
+                    <div class="row-cols-auto mt-5 justify-content-center align-items-center text-center">
+                        <div class="col-auto align-content-center align-items-center">
+                            <img src="{{ asset('images/login_logo.png') }}" class=" mb-4 img-fluid h-75 w-75 align-items-center"
+                                 alt="Sample image">
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Email input -->
+                {% if error %}
+                    <div class="alert alert-danger">Niepoprawne dane</div>
+                {% endif %}
+                <div class="mb-4 text-light">
+                    <label for="inputEmail" class="pb-2">Email</label>
+                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+                </div>
+
+                <!-- Password input -->
+                <div class="mb-4 text-light">
+                    <label for="inputPassword" class="pb-2">Hasło</label>
+                    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+                </div>
+
+{#                <!-- 2 column grid layout -->#}
+{#                <div class="row mb-4">#}
+{#                    <div class="col-auto d-flex justify-content-center">#}
+{#                        <!-- Checkbox -->#}
+{#                        <div class="form-check mb-3 mb-md-0">#}
+{#                            <input class="form-check-input" type="checkbox" value="" id="loginCheck" name="_remember_me" checked />#}
+{#                            <label class="form-check-label" for="loginCheck"> Zapamiętaj mnie </label>#}
+{#                        </div>#}
+{#                    </div>#}
+
+{#                </div>#}
+            <input type="hidden" name="_csrf_token"
+                   value="{{ csrf_token('authenticate') }}"
+            >
+
+                <!-- Submit button -->
+            <div class="row">
+                <div class="col-auto w-100 pt-3">
+                    <button type="submit" style="" class="btn btn-light btn-block mb-4 w-100">Zaloguj się</button>
+                </div>
+            </div>
+
+                <!-- Register buttons -->
+            <div class="text-center text-white">
+                <p>Nie masz konta? <a href="{{ url('app_register') }}" style="text-decoration: none; color: #0084ff">Rejestracja</a></p>
+            </div>
+        </div>
+    </div>
+            </div>
+        </div>
+    </div>
+    <!-- Pills content -->
+</form>
+{% endblock %}
