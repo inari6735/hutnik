@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\ReservationRepository;
 use App\Repository\ReservationStatusRepository;
 use App\Repository\UserRepository;
+use App\Service\ReservationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +20,8 @@ class ReservationController extends AbstractController
         UserRepository $userRepository,
         ReservationRepository $reservationRepository,
         ReservationStatusRepository $reservationStatusRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        ReservationService $reservationService
     ): Response
     {
         $user = $userRepository->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
@@ -37,6 +39,12 @@ class ReservationController extends AbstractController
             $entityManager->persist($previousReservation);
             $entityManager->flush();
         }
+        if (!empty($userReservation)) {
+            if ($userReservation->getId() == $reservation->getId()) {
+                return $this->redirectToRoute('app_table');
+            }
+        }
+
         $reservation->addUserId($user);
         $reservation->addStatusId($busyStatus);
 

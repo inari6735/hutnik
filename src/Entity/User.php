@@ -40,6 +40,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Reservation::class, mappedBy: 'user_id')]
     private $reservations;
 
+    #[ORM\ManyToOne(targetEntity: Table::class, inversedBy: 'user')]
+    private $user_table;
+
+    #[ORM\Column(type: 'boolean')]
+    private $with_person;
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
@@ -92,7 +98,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @see PasswordAuthenticatedUserInterface
+         * @see PasswordAuthenticatedUserInterface
      */
     public function getPassword(): string
     {
@@ -174,6 +180,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->reservations->removeElement($reservation)) {
             $reservation->removeUserId($this);
         }
+
+        return $this;
+    }
+
+    public function getUserTable(): ?Table
+    {
+        return $this->user_table;
+    }
+
+    public function setUserTable(?Table $user_table): self
+    {
+        $this->user_table = $user_table;
+
+        return $this;
+    }
+
+    public function isWithPerson(): ?bool
+    {
+        return $this->with_person;
+    }
+
+    public function setWithPerson(bool $with_person): self
+    {
+        $this->with_person = $with_person;
 
         return $this;
     }

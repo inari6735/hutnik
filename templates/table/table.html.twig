@@ -31,71 +31,86 @@
             </div>
 
         </div>
-        <div class="bg-dark row-12 vw-100">
-            <table class="table text-light">
-                <thead>
-                    `<tr>
-                        <td class="text-center">
-                            Stolik / Miejsce
-                        </td>
-                        <td class="text-center">
-                            1
-                        </td>
-                        <td class="text-center">
-                            2
-                        </td>
-                        <td class="text-center">
-                            3
-                        </td>
-                        <td class="text-center">
-                            4
-                        </td>
-                        <td class="text-center">
-                            5
-                        </td>
-                        <td class="text-center">
-                            6
-                        </td>
-                        <td class="text-center">
-                            7
-                        </td>
-                        <td class="text-center">
-                            8
-                        </td>
-                        <td class="text-center">
-                            9
-                        </td>
-                        <td class="text-center">
-                            10
-                        </td>
-                    </tr>`
-                </thead>
-                <tbody>
-                {% for table in tables %}
-                    <tr>
-                        <td class="text-center">
-                            {{ table.name }}
-                        </td>
-                        {% for reservation in table.getReservations() %}
-                            <td class="text-center">
-                                {% if reservation.getStatusId()[0].colour == 1 %}
-                                    <input type="checkbox" class="btn-check btn-danger" id="{{ reservation.id }}" name="options" disabled>
-                                    <label class="btn btn-warning" for="{{ reservation.id }}">{{ reservation.getStatusId()[0].getName() }}</label>
-                                {% elseif reservation.getStatusId()[0].colour == 3%}
-                                    <input type="checkbox" class="btn-check btn-danger" id="{{ reservation.id }}" name="options" disabled>
-                                    <label class="btn btn-danger" for="{{ reservation.id }}">{{ reservation.getStatusId()[0].getName() }}</label>
-                                {% else %}
-                                    <form action="{{ url('app_make_reservation') }}">
-                                        <input type="submit" class="btn-check btn-danger" value="{{ reservation.id }}" id="{{ reservation.id }}" name="reservation_id" autocomplete="off">
-                                        <label class="btn btn-success" for="{{ reservation.id }}">{{ reservation.getStatusId()[0].getName() }}</label>
-                                    </form>
-                                {% endif %}
-                            </td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+        <div class="d-flex justify-content-center mt-3">
+            <img src="{{ asset('images/tables.png') }}" class="mb-4 w-50 h-25 rounded img-thumbnail shadow-lg"
+                 alt="Sample image">
         </div>
+        <div class="bg-dark container-fluid vw-100">
+            {% set i = 0 %}
+            {% for table in tables%}
+                {% if i % 8 == 0 %}
+                    <div class="row">
+                {% endif %}
+                    <div class="card m-2 p-0 col">
+                        <div class="bg-dark text-white list-group-item text-center p-2 m-0" style="font-size: 0.8rem">{{ table.name }} ({{ table.size }} / 10)</div>
+                        <ul id="{{ table.id }}" class="list-group list-group-flush text-center" onclick="getUlChildrenIds({{ table.id }})" ondrop="drop(event)"  ondragover="allowDrop(event)">
+                            {% for user in table.getUser|sort|reverse %}
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <li id="{{ user.id }}" draggable="true" ondragstart="drag(event)"  class="text-dark list-group-item" style="font-size: 0.8rem">{{ user.getFirstName }} {{ user.getLastName }} {{ user.email }}</li>
+{#                                {% elseif myUser.id == user.id%}#}
+{#                                    <li class="text-dark list-group-item" style="font-size: 0.8rem">Twoja rezerwacja</li>#}
+{#                                {% else %}#}
+{#                                    <li class="text-dark list-group-item" style="font-size: 0.8rem">Zajęte</li>#}
+                                {% endif %}
+                            {% endfor %}
+                            {% if myUser.getUserTable.id is defined and myUser.getUserTable.id == table.id and not is_granted('ROLE_ADMIN') %}
+                                <form action="{{ url('app_remove_user_table', {'tableId': table.id}) }}">
+                                    <button class="btn btn-danger w-100 border-0 rounded-0 rounded-bottom" style="font-size: 0.8rem; background: #DC0073">Zrezygnuj</button>
+                                </form>
+                            {% elseif table.size != 0 and not (table.size == 1 and myUser.isWithPerson == 1) and not is_granted('ROLE_ADMIN') %}
+                                <form action="{{ url('app_book_table', {'tableId': table.id}) }}">
+                                    <button class="btn btn-success w-100 border-0 rounded-0 rounded-bottom" style="font-size: 0.8rem; background: #44CF6C">Zarezerwuj</button>
+                                </form>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% set i = i + 1 %}
+                {% if i % 8 == 0 %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+
+
     {% endif %}
 {% endblock %}
+
+{% block javascripts %}
+    <script>
+        const dupa = 1;
+
+        function getUlChildrenIds(ulId) {
+            const parent = document.getElementById(ulId);
+
+            const children = Array.from(parent.children);
+
+            const ids = children.map(element => {
+                return element.id;
+            });
+
+            ids.shift()
+
+            const values = {
+                usersId: ids
+            };
+
+            console.log(values);
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            let data = ev.dataTransfer.getData("text");
+            ev.target.appendChild(document.getElementById(data));
+        }
+    </script>
+{% endblock %}
+
