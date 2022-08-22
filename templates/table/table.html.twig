@@ -10,7 +10,7 @@
                 <header class="mb-auto">
                     <div>
                         {% if app.user %}
-                            <a style="font-size: 1.17em" href="{{ url('app_user') }}" class="float-md-start mb-0 pt-2 text-decoration-none text-white fw-bold">{{ app.user.getFirstName() }} {{ app.user.getLastName() }}</a>
+                            <a style="font-size: 1.17em" href="{{ url('app_user') }}" class="float-md-start mb-0 pt-2 text-decoration-none text-white fw-bold">{{ app.user.getFirstName() }} {{ app.user.getLastName() }} {% if app.user.isWithPerson() %} +1 {% endif %}</a>
                         {% endif %}
 
                         <nav class="nav nav-masthead justify-content-center float-md-end">
@@ -35,6 +35,36 @@
             <img src="{{ asset('images/tables.png') }}" class="mb-4 w-50 h-25 rounded img-thumbnail shadow-lg"
                  alt="Sample image">
         </div>
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="container-fluid" ondrop="dropRemoveUserTable(event)"  ondragover="allowDrop(event)">
+                <div id="dupa" class="row p-2 text-center">
+                    <h2 class="text-white">Użytkownicy bez rezerwacji:</h2>
+                {% for user in usersWithoutTable %}
+                        <div class="col-auto">
+                            <div class="m-1">
+                                <div id="{{ user.id }}" draggable="true" ondragstart="drag(event)"  class="text-dark list-group-item" style="font-size: 0.8rem; {%if user.isWithPerson() %} background: #CEA2AC {% else %} background: #EFD9CE {% endif %}">{{ user.getFirstName }} {{ user.getLastName }} {{ user.email }}</div>
+                            </div>
+                        </div>
+                {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if not is_granted('ROLE_ADMIN')%}
+        {% if myUser.getUserTable() %}
+            <div class="container-fluid vw-100 text-center text-white bg-success mb-1">
+                <div class="p-2">
+                    Posiadasz rezerwację{% if myUser.isWithPerson() %} dla dwóch osób {% else %} dla jednej osoby{% endif %}: {{ myUser.getUserTable().getName() }}
+                </div>
+            </div>
+            {% else %}
+            <div class="bg-danger container-fluid vw-100 text-center text-white mb-1" style="background: #44CF6C">
+                <div class="p-2">
+                    Nie posiadasz jeszcze żadnej rezerwacji
+                </div>
+            </div>
+            {% endif %}
+        {% endif%}
         <div class="bg-dark container-fluid vw-100">
             {% set i = 0 %}
             {% for table in tables%}
@@ -42,27 +72,25 @@
                     <div class="row">
                 {% endif %}
                     <div class="card m-2 p-0 col">
-                        <div class="bg-dark text-white list-group-item text-center p-2 m-0" style="font-size: 0.8rem">{{ table.name }} ({{ table.size }} / 10)</div>
-                        <ul id="{{ table.id }}" class="list-group list-group-flush text-center" onclick="getUlChildrenIds({{ table.id }})" ondrop="drop(event)"  ondragover="allowDrop(event)">
-                            {% for user in table.getUser|sort|reverse %}
-                                {% if is_granted('ROLE_ADMIN') %}
-                                    <li id="{{ user.id }}" draggable="true" ondragstart="drag(event)"  class="text-dark list-group-item" style="font-size: 0.8rem">{{ user.getFirstName }} {{ user.getLastName }} {{ user.email }}</li>
-{#                                {% elseif myUser.id == user.id%}#}
-{#                                    <li class="text-dark list-group-item" style="font-size: 0.8rem">Twoja rezerwacja</li>#}
-{#                                {% else %}#}
-{#                                    <li class="text-dark list-group-item" style="font-size: 0.8rem">Zajęte</li>#}
+                        <div class="bg-dark text-white list-group-item text-center p-2 m-0" ondrop="drop(event, {{ table.id }})"  ondragover="allowDrop(event)" style="font-size: 0.8rem">{{ table.name }} ({{ table.size }} / 10)</div>
+                            <div id="{{ table.id }}" class="list-group list-group-flush text-center h-100" ondrop="drop(event, {{ table.id }})"  ondragover="allowDrop(event)">
+                                {% for user in table.getUser|sort|reverse %}
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <div id="{{ user.id }}" draggable="true" ondragstart="drag(event)"  class="text-dark list-group-item" style="font-size: 0.8rem; {%if user.isWithPerson() %} background: #CEA2AC {% else %} background: #EFD9CE {% endif %}">{{ user.getFirstName }} {{ user.getLastName }} {{ user.email }}</div>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if myUser.getUserTable.id is defined and myUser.getUserTable.id == table.id and not is_granted('ROLE_ADMIN') %}
+{#                                    <form action="{{ url('app_remove_user_table', {'tableId': table.id}) }}">#}
+                                        <button class="btn btn-danger w-100 border-0 rounded-0 rounded-bottom" onclick="removeReservation({{ table.id }})" style="font-size: 0.8rem; background: #DC0073">Zrezygnuj</button>
+{#                                    </form>#}
+                                {% elseif table.size > 0 and not (table.size == 1 and myUser.isWithPerson == 1) and not is_granted('ROLE_ADMIN') %}
+{#                                    <form action="{{ url('app_book_table', {'tableId': table.id}) }}">#}
+                                        <button class="btn btn-success w-100 border-0 rounded-0 rounded-bottom" onclick="makeReservation({{ table.id }})" style="font-size: 0.8rem; background: #44CF6C">Zarezerwuj</button>
+{#                                    </form>#}
+                                {% elseif not is_granted('ROLE_ADMIN')%}
+                                    Brak miejsc
                                 {% endif %}
-                            {% endfor %}
-                            {% if myUser.getUserTable.id is defined and myUser.getUserTable.id == table.id and not is_granted('ROLE_ADMIN') %}
-                                <form action="{{ url('app_remove_user_table', {'tableId': table.id}) }}">
-                                    <button class="btn btn-danger w-100 border-0 rounded-0 rounded-bottom" style="font-size: 0.8rem; background: #DC0073">Zrezygnuj</button>
-                                </form>
-                            {% elseif table.size != 0 and not (table.size == 1 and myUser.isWithPerson == 1) and not is_granted('ROLE_ADMIN') %}
-                                <form action="{{ url('app_book_table', {'tableId': table.id}) }}">
-                                    <button class="btn btn-success w-100 border-0 rounded-0 rounded-bottom" style="font-size: 0.8rem; background: #44CF6C">Zarezerwuj</button>
-                                </form>
-                            {% endif %}
-                        </ul>
+                            </div>
                     </div>
                 {% set i = i + 1 %}
                 {% if i % 8 == 0 %}
@@ -78,7 +106,6 @@
 
 {% block javascripts %}
     <script>
-        const dupa = 1;
 
         function getUlChildrenIds(ulId) {
             const parent = document.getElementById(ulId);
@@ -106,11 +133,56 @@
             ev.dataTransfer.setData("text", ev.target.id);
         }
 
-        function drop(ev) {
+        function drop(ev, tableId, userId) {
             ev.preventDefault();
+            let table = document.getElementById(tableId)
             let data = ev.dataTransfer.getData("text");
-            ev.target.appendChild(document.getElementById(data));
+            table.appendChild(document.getElementById(data))
+
+            const xhr = new XMLHttpRequest();
+            const url = "/admin/table/" + tableId + "/user/" + data
+            xhr.open('POST', url)
+            xhr.send()
+            xhr.onreadystatechange=(e)=>{
+                window.location.reload()
+            }
         }
+
+        function dropRemoveUserTable(ev) {
+            ev.preventDefault();
+            let table = document.getElementById("dupa")
+            let data = ev.dataTransfer.getData("text");
+            table.appendChild(document.getElementById(data))
+
+            const xhr = new XMLHttpRequest();
+            const url = "/admin/remove/user/" + data
+            xhr.open('POST', url)
+            xhr.send()
+            xhr.onreadystatechange=(e)=>{
+                window.location.reload()
+            }
+        }
+
+        function makeReservation(tableId) {
+            const xhr = new XMLHttpRequest();
+            const url = "/user/table/" + tableId
+            xhr.open('POST', url)
+            xhr.send()
+            xhr.onreadystatechange=(e)=>{
+                window.location.reload()
+            }
+        }
+
+        function removeReservation(tableId) {
+            const xhr = new XMLHttpRequest();
+            const url = "/user/remove/table/" + tableId
+            xhr.open('POST', url)
+            xhr.send()
+            xhr.onreadystatechange=(e)=>{
+                window.location.reload()
+            }
+        }
+
     </script>
 {% endblock %}
 

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Repository\TableRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,12 +18,14 @@ class TableController extends AbstractController
     ): Response
     {
         $tables = $tableRepository->findAll();
+        $usersWithoutTable = $userRepository->findBy(['user_table' => null]);
         $myUserIdentifier = $this->getUser()->getUserIdentifier();
         $user = $userRepository->findOneBy(['email' => $myUserIdentifier]);
 
         return $this->render('table/table.html.twig', [
             'tables' => $tables,
-            'myUser' => $user
+            'myUser' => $user,
+            'usersWithoutTable' => $usersWithoutTable
         ]);
     }
 }

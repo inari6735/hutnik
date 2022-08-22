@@ -50,7 +50,7 @@ class UserController extends AbstractController
         GetUserSizeCostService $costService,
         RemoveUserTableService $removeUserTableService,
         GetUserSizeCostService $getUserSizeCostService
-    ): Response
+    ): Void
     {
         $user = $userRepository->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
         $table = $tableRepository->findOneBy(['id' => $tableId]);
@@ -79,8 +79,58 @@ class UserController extends AbstractController
             }
             $entityManager->close();
         }
+    }
 
-        return $this->redirectToRoute('app_table');
+
+    #[Route('/admin/table/{tableId}/user/{userId}', name: 'app_manage_table')]
+    public function manage_user_table(
+        int $tableId,
+        int $userId,
+        UserRepository $userRepository,
+        TableRepository $tableRepository,
+        EntityManagerInterface $entityManager,
+        IsUserCanBookTableService $bookTableService,
+        GetUserSizeCostService $costService,
+        GetUserSizeCostService $getUserSizeCostService
+    ): Response
+    {
+        $user = $userRepository->findOneBy(['id' => $userId]);
+        $table = $tableRepository->findOneBy(['id' => $tableId]);
+        $userTable = $user->getUserTable();
+        $sizeCost = $getUserSizeCostService->getUserSizeCost($user);
+
+        $newSize = $costService->getTableSizeAfterUserBook($user, $table);
+
+        $entityManager->beginTransaction();
+        try {
+            if(!$userTable) {
+                $user->setUserTable($table);
+                $table->setSize($newSize);
+                $entityManager->persist($user);
+                $entityManager->persist($table);
+                $entityManager->flush();
+                $entityManager->getConnection()->commit();
+            }
+
+            if($userTable->getId() != $table->getId()) {
+                $tableSize = $userTable->getSize();
+                $userTable->setSize($tableSize + $sizeCost);
+                $entityManager->persist($userTable);
+                $user->setUserTable($table);
+                $table->setSize($newSize);
+                $entityManager->persist($user);
+                $entityManager->persist($table);
+                $entityManager->flush();
+                $entityManager->getConnection()->commit();
+            }
+        } catch (Exception $e) {
+            $entityManager->getConnection()->rollBack();
+            throw $e;
+        }
+        $entityManager->close();
+
+        return $this->json([]);
+//        return $this->redirectToRoute('app_table');
     }
 
     #[Route('/user/remove/table/{tableId}', name: 'app_remove_user_table')]
@@ -90,13 +140,27 @@ class UserController extends AbstractController
         GetUserSizeCostService $costService,
         TableRepository $tableRepository,
         RemoveUserTableService $removeUserTableService
-    ): Response
+    ): Void
     {
         $user = $userRepository->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
         $table = $tableRepository->findOneBy(['id' => $tableId]);
 
         $removeUserTableService->removeUserTable($user, $table);
+    }
 
-        return $this->redirectToRoute('app_table');
+    #[Route('/admin/remove/user/{userId}', name: 'app_remove_admin_table')]
+    public function remove_admin_table(
+        int $userId,
+        UserRepository $userRepository,
+        TableRepository $tableRepository,
+        RemoveUserTableService $removeUserTableService
+    ): Response
+    {
+        $user = $userRepository->findOneBy(['id' => $userId]);
+        $table = $user->getUserTable();
+
+        $removeUserTableService->removeUserTable($user, $table);
+
+        return $this->json([]);
     }
 }

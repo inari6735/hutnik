@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+    {% block stylesheets %}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+        <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/cover/">
+        <link rel="stylesheet" href="{{ asset('css/cover.css') }}">
+    {% endblock %}
+    {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+    {#        {% block stylesheets %}#}
+    {#            {{ encore_entry_link_tags('app') }}#}
+    {#        {% endblock %}#}
+
+    {% block javascripts %}
+        {#            {{ encore_entry_script_tags('app') }}#}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    {% endblock %}
+
+</head>
+<body class="bg-dark">
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <div class="d-flex vh-100 text-center text-white bg-dark">
+        <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+            <header class="mb-auto">
+                <div>
+                    {% if app.user %}
+                        <a style="font-size: 1.17em" href="{{ url('app_user') }}" class="float-md-start mb-0 pt-2 text-decoration-none text-white fw-bold">{{ app.user.getFirstName() }} {{ app.user.getLastName() }} {% if app.user.isWithPerson() %} +1 {% endif %}</a>
+                    {% endif %}
+
+                    <nav class="nav nav-masthead justify-content-center float-md-end">
+                        <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="{{ url('app_home') }}">Home</a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a class="nav-link fw-bold py-1 px-0" href="{{ url('app_admin_email') }}">Dostęp</a>
+                        {% endif %}
+                        <a class="nav-link fw-bold py-1 px-0" href="#">Informacje</a>
+                        <a class="nav-link fw-bold py-1 px-0" href="#">Kontakt</a>
+                        <a class="nav-link fw-bold py-1 px-0" href="{{ path('app_logout') }}">Wyloguj się</a>
+                    </nav>
+                </div>
+            </header>
+            {% block body %}{% endblock %}
+            <footer class="mt-auto text-white-50">
+                <p></p>
+            </footer>
+        </div>
+    </div>
+    {% endif %}
+</body>
+</html>
