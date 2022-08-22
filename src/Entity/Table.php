@@ -19,9 +19,6 @@ class Table
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[ORM\ManyToMany(targetEntity: Reservation::class, mappedBy: 'table_id')]
-    private $reservations;
-
     #[ORM\Column(type: 'integer')]
     private $size;
 
@@ -30,7 +27,6 @@ class Table
 
     public function __construct()
     {
-        $this->reservations = new ArrayCollection();
         $this->user = new ArrayCollection();
     }
 
@@ -47,33 +43,6 @@ class Table
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Reservation>
-     */
-    public function getReservations(): Collection
-    {
-        return $this->reservations;
-    }
-
-    public function addReservation(Reservation $reservation): self
-    {
-        if (!$this->reservations->contains($reservation)) {
-            $this->reservations[] = $reservation;
-            $reservation->addTableId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReservation(Reservation $reservation): self
-    {
-        if ($this->reservations->removeElement($reservation)) {
-            $reservation->removeTableId($this);
-        }
 
         return $this;
     }

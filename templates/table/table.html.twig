@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Strona główna{% endblock %}
+{% block title %}Rezerwacja{% endblock %}
 
 {% block body %}
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
@@ -99,7 +99,6 @@
             {% endfor %}
 
         </div>
-
 
     {% endif %}
 {% endblock %}

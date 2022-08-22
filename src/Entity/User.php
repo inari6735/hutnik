@@ -37,9 +37,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime')]
     private $date_add;
 
-    #[ORM\ManyToMany(targetEntity: Reservation::class, mappedBy: 'user_id')]
-    private $reservations;
-
     #[ORM\ManyToOne(targetEntity: Table::class, inversedBy: 'user')]
     private $user_table;
 
@@ -153,33 +150,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDateAdd(\DateTimeInterface $date_add): self
     {
         $this->date_add = $date_add;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Reservation>
-     */
-    public function getReservations(): Collection
-    {
-        return $this->reservations;
-    }
-
-    public function addReservation(Reservation $reservation): self
-    {
-        if (!$this->reservations->contains($reservation)) {
-            $this->reservations[] = $reservation;
-            $reservation->addUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReservation(Reservation $reservation): self
-    {
-        if ($this->reservations->removeElement($reservation)) {
-            $reservation->removeUserId($this);
-        }
 
         return $this;
     }
