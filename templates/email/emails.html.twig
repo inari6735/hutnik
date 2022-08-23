@@ -16,7 +16,7 @@
             {% for email in emails %}
                 <tr>
                     <td class="text-white">
-                        {{ email.email }} {% if email.getWithPerson() %}+1{% endif %}
+                        {{ email.email }} {% if email.getWithPerson() %}<a class="text-warning text-decoration-none">+1</a>{% endif %}
                         <a class="link-danger text-decoration-none" href="{{ url('app_admin_email_remove', {'emailId': email.id}) }}">-</a>
                     </td>
                 </tr>
