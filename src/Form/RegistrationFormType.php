@@ -72,13 +72,13 @@ class RegistrationFormType extends AbstractType
                 ],
                 'label' => 'Nazwisko'
             ])
-            ->add('with_person', CheckboxType::class, [
-                'label_attr' => [
-                    'class' => 'pb-2'
-                ],
-                'label' => 'Z osobą towarzyszącą',
-                'required' => false
-            ])
+//            ->add('with_person', CheckboxType::class, [
+//                'label_attr' => [
+//                    'class' => 'pb-2'
+//                ],
+//                'label' => 'Z osobą towarzyszącą',
+//                'required' => false
+//            ])
         ;
     }
 

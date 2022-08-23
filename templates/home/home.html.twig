@@ -3,11 +3,15 @@
 {% block title %}Strona główna{% endblock %}
 
 {% block body %}
-    <main class="px-3">
-        <h1>Uroczysty Bal Wydziałowy</h1>
-        <p class="lead">Bal jest okazją do wspólnych spotkań i rozmów, ale przede wszystkim do wspólnej zabawy, która potrwa do samego rana. Piękne Panie, eleganccy Panowie, super muzyka, to tylko początek zapowiedzi tej noworocznej imprezy.</p>
-        <p class="lead">
-            <a href="{{ url('app_table') }}" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Zajmij miejsce</a>
-        </p>
+
+    <main class="px-5 mt-5">
+        <div class="card border border-5 border-white rounded-5 bg-white align-items-center">
+            <img class="border-5 border-dark border rounded-5 mb-2 mt-2" src="{{ asset('images/home_background.png') }}" alt="" width="600">
+            <p class="lead p-2 text-dark">Bal jest okazją do wspólnych spotkań i rozmów, ale przede wszystkim do wspólnej zabawy, która potrwa do samego rana. Piękne Panie, eleganccy Panowie, super muzyka, to tylko początek zapowiedzi tej noworocznej imprezy.</p>
+            <p class="lead">
+                <a href="{{ url('app_table') }}" class="btn btn-lg btn-secondary fw-bold border-white bg-dark text-white">Zajmij miejsce</a>
+            </p>
+        </div>
+
     </main>
 {% endblock %}

@@ -16,6 +16,9 @@ class Email
     #[ORM\Column(type: 'string', length: 255)]
     private $email;
 
+    #[ORM\Column(type: 'integer')]
+    private $with_person;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -29,6 +32,18 @@ class Email
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getWithPerson(): ?int
+    {
+        return $this->with_person;
+    }
+
+    public function setWithPerson(int $with_person): self
+    {
+        $this->with_person = $with_person;
 
         return $this;
     }

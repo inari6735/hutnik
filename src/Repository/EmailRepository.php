@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Email;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +38,11 @@ class EmailRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function getUnregisteredEmails()
+    {
+        return $this->getEntityManager()->createQuery("SELECT e.email FROM App\Entity\Email e LEFT JOIN App\Entity\User u WITH u.email = e.email WHERE u.email is null")->getResult();
     }
 
 //    /**

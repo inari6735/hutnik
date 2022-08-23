@@ -5,7 +5,7 @@
 {% block body %}
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <link rel="stylesheet" href="{{ asset('css/cover.css') }}">
-        <div class="d-flex row-12 v-100 text-center text-white bg-dark">
+        <div class="d-flex row-12 v-100 text-center text-white">
             <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
                 <header class="mb-auto">
                     <div>
@@ -18,8 +18,8 @@
                             {% if is_granted('ROLE_ADMIN') %}
                                 <a class="nav-link fw-bold py-1 px-0" href="{{ url('app_admin_email') }}">Dostęp</a>
                             {% endif %}
-                            <a class="nav-link fw-bold py-1 px-0" href="#">Informacje</a>
-                            <a class="nav-link fw-bold py-1 px-0" href="#">Kontakt</a>
+                            <a class="nav-link fw-bold py-1 px-0" href="{{ url('app_information') }}">Informacje</a>
+                            <a class="nav-link fw-bold py-1 px-0" href="{{ url('app_contact') }}">Kontakt</a>
                             <a class="nav-link fw-bold py-1 px-0" href="{{ path('app_logout') }}">Wyloguj się</a>
                         </nav>
                     </div>
@@ -31,9 +31,8 @@
             </div>
 
         </div>
-        <div class="d-flex justify-content-center mt-3">
-            <img src="{{ asset('images/tables.png') }}" class="mb-4 w-50 h-25 rounded img-thumbnail shadow-lg"
-                 alt="Sample image">
+        <div class="d-flex align-items-center justify-content-center mt-3">
+            <img src="{{ asset('images/tables.png') }}" class="mb-4 w-50 h-25 rounded-5 img-thumbnail shadow-lg" alt="Sample image">
         </div>
         {% if is_granted('ROLE_ADMIN') %}
             <div class="container-fluid" ondrop="dropRemoveUserTable(event)"  ondragover="allowDrop(event)">
@@ -42,7 +41,7 @@
                 {% for user in usersWithoutTable %}
                         <div class="col-auto">
                             <div class="m-1">
-                                <div id="{{ user.id }}" draggable="true" ondragstart="drag(event)"  class="text-dark list-group-item" style="font-size: 0.8rem; {%if user.isWithPerson() %} background: #CEA2AC {% else %} background: #EFD9CE {% endif %}">{{ user.getFirstName }} {{ user.getLastName }} {{ user.email }}</div>
+                                <div id="{{ user.id }}dupa" draggable="true" ondragstart="drag(event)"  class="list-group-item" style="font-size: 0.8rem; {%if user.isWithPerson() %} background: #202428; color: #ffffff {% else %} background: #ffffff; color: #202428{% endif %}">{{ user.getFirstName }} {{ user.getLastName }} {{ user.email }}</div>
                             </div>
                         </div>
                 {% endfor %}
@@ -76,7 +75,7 @@
                             <div id="{{ table.id }}" class="list-group list-group-flush text-center h-100" ondrop="drop(event, {{ table.id }})"  ondragover="allowDrop(event)">
                                 {% for user in table.getUser|sort|reverse %}
                                     {% if is_granted('ROLE_ADMIN') %}
-                                        <div id="{{ user.id }}" draggable="true" ondragstart="drag(event)"  class="text-dark list-group-item" style="font-size: 0.8rem; {%if user.isWithPerson() %} background: #CEA2AC {% else %} background: #EFD9CE {% endif %}">{{ user.getFirstName }} {{ user.getLastName }} {{ user.email }}</div>
+                                        <div id="{{ user.id }}dupa" draggable="true" ondragstart="drag(event)"  class="list-group-item" style="font-size: 0.8rem; {%if user.isWithPerson() %} background: #202428; color: #ffffff {% else %} background: #ffffff; color: #202428{% endif %}">{{ user.getFirstName }} {{ user.getLastName }} {{ user.email }}</div>
                                     {% endif %}
                                 {% endfor %}
                                 {% if myUser.getUserTable.id is defined and myUser.getUserTable.id == table.id and not is_granted('ROLE_ADMIN') %}
@@ -139,7 +138,7 @@
             table.appendChild(document.getElementById(data))
 
             const xhr = new XMLHttpRequest();
-            const url = "/admin/table/" + tableId + "/user/" + data
+            const url = "/admin/table/" + tableId + "/user/" + data.slice(0, -4)
             xhr.open('POST', url)
             xhr.send()
             xhr.onreadystatechange=(e)=>{
@@ -154,7 +153,7 @@
             table.appendChild(document.getElementById(data))
 
             const xhr = new XMLHttpRequest();
-            const url = "/admin/remove/user/" + data
+            const url = "/admin/remove/user/" + data.slice(0, -4)
             xhr.open('POST', url)
             xhr.send()
             xhr.onreadystatechange=(e)=>{

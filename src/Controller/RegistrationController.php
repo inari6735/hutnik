@@ -35,12 +35,16 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $emailRepository->findOneBy(['email' => $form->get('email')->getData()]);
+
             if(!$email) {
                 return $this->render('registration/register.html.twig', [
                     'registrationForm' => $form->createView(),
                     'emailError' => True
                 ]);
             }
+
+            $withPerson = $email->getWithPerson();
+
             $user->setPassword(
             $userPasswordHasher->hashPassword(
                     $user,
@@ -49,6 +53,7 @@ class RegistrationController extends AbstractController
             );
             $user->setDateAdd(new \DateTime());
             $user->setRoles(['ROLE_USER']);
+            $user->setWithPerson($withPerson);
 
             $entityManager->persist($user);
             $entityManager->flush();

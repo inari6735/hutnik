@@ -18,9 +18,11 @@ class EmailController extends AbstractController
     ): Response
     {
         $emails = $emailRepository->findAll();
+        $unregisteredEmails = $emailRepository->getUnregisteredEmails();
 
         return $this->render('email/emails.html.twig', [
-            'emails' => $emails
+            'emails' => $emails,
+            'unregisteredEmails' => $unregisteredEmails
         ]);
     }
 
@@ -30,8 +32,16 @@ class EmailController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response
     {
+        $emailString = trim($request->query->get('email'));
+        $withPerson = 0;
+        if (str_ends_with($emailString, ' +1')) {
+            $emailString = trim(substr($emailString, 0, -3));
+            $withPerson = 1;
+        }
         $email = new Email();
-        $email->setEmail($request->query->get('email'));
+        $email->setEmail($emailString);
+        $email->setWithPerson($withPerson);
+
         $entityManager->persist($email);
         $entityManager->flush();
 
