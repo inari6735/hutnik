@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
     <link rel="icon" href="{{ asset('images/favicon.png') }}">
+    {% block mystyles %}
+    {% endblock %}
     {% block stylesheets %}
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
         <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/cover/">
@@ -20,9 +22,10 @@
     {% endblock %}
 
 </head>
-<body class="bg-dark">
+<body class="bg-dark" >
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-    <div class="d-flex vh-100 text-center text-white">
+    <div class="d-flex vh-100 text-center text-white bg-dark">
+
         <div class="cover-container d-flex w-100 p-3 mx-auto flex-column">
             <header class="mb-auto">
                 <div>
@@ -31,13 +34,13 @@
                     {% endif %}
 
                     <nav class="nav nav-masthead justify-content-center float-md-end">
-                        <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="{{ url('app_home') }}">Home</a>
+                        <a id="nv1" class="nav-link fw-bold py-1 px-0" aria-current="page" href="{{ url('app_home') }}">Home</a>
                         {% if is_granted('ROLE_ADMIN') %}
-                            <a class="nav-link fw-bold py-1 px-0" href="{{ url('app_admin_email') }}">Dostęp</a>
+                            <a id="nv2" class="nav-link fw-bold py-1 px-0" href="{{ url('app_admin_email') }}">Dostęp</a>
                         {% endif %}
-                        <a class="nav-link fw-bold py-1 px-0" href="{{ url('app_information') }}">Informacje</a>
-                        <a class="nav-link fw-bold py-1 px-0" href="{{ url('app_contact') }}">Kontakt</a>
-                        <a class="nav-link fw-bold py-1 px-0" href="{{ path('app_logout') }}">Wyloguj się</a>
+                        <a id="nv3" class="nav-link fw-bold py-1 px-0" aria-current="page" href="{{ url('app_information') }}">Informacje</a>
+                        <a id="nv4" class="nav-link fw-bold py-1 px-0" href="{{ url('app_contact') }}">Kontakt</a>
+                        <a id="nv5" class="nav-link fw-bold py-1 px-0" href="{{ path('app_logout') }}">Wyloguj się</a>
                     </nav>
                 </div>
             </header>
@@ -46,6 +49,7 @@
                 <p></p>
             </footer>
         </div>
+
     </div>
     {% endif %}
 </body>

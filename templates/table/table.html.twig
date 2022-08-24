@@ -5,7 +5,7 @@
 {% block body %}
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <link rel="stylesheet" href="{{ asset('css/cover.css') }}">
-        <div class="d-flex row-12 v-100 text-center text-white">
+        <div class="d-flex row-12 v-100 text-center text-white bg-dark">
             <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
                 <header class="mb-auto">
                     <div>
@@ -14,7 +14,7 @@
                         {% endif %}
 
                         <nav class="nav nav-masthead justify-content-center float-md-end">
-                            <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="{{ url('app_home') }}">Home</a>
+                            <a class="nav-link fw-bold py-1 px-0" aria-current="page" href="{{ url('app_home') }}">Home</a>
                             {% if is_granted('ROLE_ADMIN') %}
                                 <a class="nav-link fw-bold py-1 px-0" href="{{ url('app_admin_email') }}">Dostęp</a>
                             {% endif %}
@@ -31,11 +31,11 @@
             </div>
 
         </div>
-        <div class="d-flex align-items-center justify-content-center mt-3">
+        <div class="d-flex align-items-center justify-content-center bg-dark">
             <img src="{{ asset('images/tables.png') }}" class="mb-4 w-50 h-25 rounded-5 img-thumbnail shadow-lg" alt="Sample image">
         </div>
         {% if is_granted('ROLE_ADMIN') %}
-            <div class="container-fluid" ondrop="dropRemoveUserTable(event)"  ondragover="allowDrop(event)">
+            <div class="container-fluid bg-dark" ondrop="dropRemoveUserTable(event)"  ondragover="allowDrop(event)">
                 <div id="dupa" class="row p-2 text-center">
                     <h2 class="text-white">Użytkownicy bez rezerwacji:</h2>
                 {% for user in usersWithoutTable %}
