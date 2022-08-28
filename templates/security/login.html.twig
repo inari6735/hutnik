@@ -6,7 +6,7 @@
 <form method="post">
     <!-- Pills content -->
     <div class="container-fluid align-content-center justify-content-center">
-        <div class="row d-flex justify-content-center align-content-center">
+        <div class="row d-flex justify-content-center align-content-center row-height">
             <div class="col-6">
     <div class="tab-content align-content-center">
         <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
@@ -14,7 +14,7 @@
                 <div class="container-fluid mt-0 mb-5 justify-content-center align-items-center">
                     <div class="row-cols-auto mt-5 justify-content-center align-items-center text-center">
                         <div class="col-auto align-content-center align-items-center">
-                            <img src="{{ asset('images/login_logo.png') }}" class=" mb-4 img-fluid h-75 w-75 align-items-center"
+                            <img src="{{ asset('images/old_login_logo.png') }}" class=" mb-4 img-fluid align-items-center img-size"
                                  alt="Sample image">
                         </div>
 
@@ -26,13 +26,14 @@
                 {% if error %}
                     <div class="alert alert-danger">Niepoprawne dane</div>
                 {% endif %}
-                <div class="mb-4 text-light">
+
+                <div class="mb-4 text-dark fnt-size">
                     <label for="inputEmail" class="pb-2">Email</label>
                     <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
                 </div>
 
                 <!-- Password input -->
-                <div class="mb-4 text-light">
+                <div class="mb-4 text-dark fnt-size">
                     <label for="inputPassword" class="pb-2">Hasło</label>
                     <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
                 </div>
@@ -55,12 +56,12 @@
                 <!-- Submit button -->
             <div class="row">
                 <div class="col-auto w-100 pt-3">
-                    <button type="submit" style="" class="btn btn-light btn-block mb-4 w-100">Zaloguj się</button>
+                    <button type="submit" class="btn btn-block btn-dark text-white mb-4 w-100 fnt-size">Zaloguj się</button>
                 </div>
             </div>
 
                 <!-- Register buttons -->
-            <div class="text-center text-white">
+            <div class="text-center text-dark fnt-size" style="color: #0084ff">
                 <p>Nie masz konta? <a href="{{ url('app_register') }}" style="text-decoration: none; color: #0084ff">Rejestracja</a></p>
             </div>
         </div>

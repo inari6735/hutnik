@@ -3,38 +3,45 @@
 {% block title %}Konto{% endblock %}
 
 {% block body %}
-    <main class="px-3">
-        <table class="table table-striped text-white">
-            <thead>
-                <tr>
-                    <td>
-                        Informacje o koncie
-                    </td>
-                </tr>
-            </thead>
-            <tbody class="table-striped">
-                <tr>
-                    <td class="d-flex text-white align-items-start">
-                        Email: {{ user.email }}
-                    </td>
-                </tr>
-                <form action="{{ url('app_use_update') }}">
-                    <tr>
-                        <td class="d-flex text-white align-items-start">
-                            <label class="pe-2" for="nm">Imię:</label>
-                            <input class="text-white" style="background: none; border: none" id="nm" value="{{ user.getFirstName() }}" type="text" name="first_name">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="d-flex text-white align-items-start">
-                            <label class="pe-2" for="nlm">Nazwisko:</label>
-                            <input class="text-white" style="background: none; border: none" id="nlm" value="{{ user.getLastName() }}" type="text" name="last_name">
-                        </td>
-                    </tr>
-            </tbody>
-        </table>
-        <button class="d-flex btn btn-light" type="submit">Zapisz</button>
-        </form>
+    <main>
+        <div class="container p-5">
+            <div class="row align-items-center p-5">
+
+                    <table class="table table-striped text-dark text-size-custom w-100">
+                        <thead>
+                        <tr>
+                            <td>
+                                Informacje o koncie
+                            </td>
+                        </tr>
+                        </thead>
+                        <tbody class="table-bordered">
+                        <tr>
+                            <td class="d-flex text-dark align-items-start">
+                                Email: {{ user.email }}
+                            </td>
+                        </tr>
+                        <form action="{{ url('app_use_update') }}">
+                            <tr>
+                                <td class="d-flex text-dark align-items-start">
+                                    <label class="pe-2" for="nm">Imię:</label>
+                                    <input class="text-dark" style="background: none; border: none" id="nm" value="{{ user.getFirstName() }}" type="text" name="first_name">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="d-flex text-dark align-items-start">
+                                    <label class="pe-2" for="nlm">Nazwisko:</label>
+                                    <input class="text-dark" style="background: none; border: none" id="nlm" value="{{ user.getLastName() }}" type="text" name="last_name">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="d-flex btn justify-content-center text-size-custom w-100" style="background: #ffc107" type="submit">Zapisz</button>
+                    </form>
+
+            </div>
+        </div>
+
     </main>
 
 {% endblock %}

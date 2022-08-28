@@ -92,7 +92,7 @@ class UserController extends AbstractController
         IsUserCanBookTableService $bookTableService,
         GetUserSizeCostService $costService,
         GetUserSizeCostService $getUserSizeCostService
-    ): Response
+    ): Void
     {
         $user = $userRepository->findOneBy(['id' => $userId]);
         $table = $tableRepository->findOneBy(['id' => $tableId]);
@@ -128,9 +128,6 @@ class UserController extends AbstractController
             throw $e;
         }
         $entityManager->close();
-
-        return $this->json([]);
-//        return $this->redirectToRoute('app_table');
     }
 
     #[Route('/user/remove/table/{tableId}', name: 'app_remove_user_table')]

@@ -1,0 +1,17 @@
+@media only screen and (max-width: 1050px) {
+    .row-height {
+        height: 100vh;
+    }
+
+    .fnt-size {
+        font-size: 30px;
+    }
+
+    .img-size {
+        height: 200px;
+        width: auto;
+    }
+}
+@media only screen and (min-width: 1050px) {
+
+}

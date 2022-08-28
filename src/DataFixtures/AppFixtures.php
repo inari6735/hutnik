@@ -21,7 +21,7 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         for ($i = 0; $i < 40; $i++) {
-            $table = (new Table())->setName('Stolik '.$i+1)->setSize(10);
+            $table = (new Table())->setName('Stół '.$i+1)->setSize(10);
             $manager->persist($table);
         }
 

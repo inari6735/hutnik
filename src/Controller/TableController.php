@@ -22,7 +22,7 @@ class TableController extends AbstractController
         $myUserIdentifier = $this->getUser()->getUserIdentifier();
         $user = $userRepository->findOneBy(['email' => $myUserIdentifier]);
 
-        return $this->render('table/table.html.twig', [
+        return $this->render('table/new_table.html.twig', [
             'tables' => $tables,
             'myUser' => $user,
             'usersWithoutTable' => $usersWithoutTable

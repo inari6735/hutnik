@@ -1,0 +1,165 @@
+{% extends 'core_base.html.twig' %}
+
+{% block title %}Rezerwacja{% endblock %}
+
+{% block body %}
+    <main>
+        <div class="container">
+            <div class="row">
+                <div class="col pt-5 text-center">
+                    <img class="img-fluid img-height" src="{{ asset('images/tables.png') }}" alt="">
+                </div>
+            </div>
+            <!-- user section -->
+            {% if is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN') %}
+            {% if myUser.getUserTable() %}
+                <div class="row text-center">
+                    <div class="col mt-5 p-4 text-light" style="background: #44CF6C; font-family: 'Ropa Sans', sans-serif; font-weight: bold;">
+                        Posiadasz rezerwację{% if myUser.isWithPerson() %} dla dwóch osób {% else %} dla jednej osoby{% endif %}: {{ myUser.getUserTable().getName() }}
+                    </div>
+                </div>
+            {% else %}
+                <div class="row text-center">
+                    <div class="col mt-5 p-4 text-light" style="background: #FF4655; font-family: 'Ropa Sans', sans-serif; font-weight: bold;">
+                        Nie posiadasz jeszcze żadnej rezerwacji
+                    </div>
+                </div>
+            {% endif %}
+            <div class="row pt-5">
+                {% for table in tables %}
+                    <div class="col pt-3">
+                        <div class="button-borders">
+                            {% if myUser.getUserTable.id is defined and myUser.getUserTable.id == table.id %}
+                                <button class="primary-button" style="background: #44CF6C;" onclick="removeReservation({{ table.id }})">{{ table.name }} ({{ 10 - table.size }}/10)</button>
+                            {% elseif table.size > 0 and not (table.size == 1 and myUser.isWithPerson == 1) %}
+                                <button class="primary-button" onclick="makeReservation({{ table.id }})">{{ table.name }} ({{ 10 - table.size }}/10)</button>
+                            {% else %}
+                                <button class="primary-button" style="background: #FF4655;">{{ table.name }} ({{ 10 - table.size }}/10)</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <!-- end user section -->
+
+            <!-- admin section -->
+            {% if is_granted('ROLE_ADMIN') %}
+                <div class="row">
+                    <div class="container-fluid" ondrop="dropRemoveUserTable(event)"  ondragover="allowDrop(event)">
+                        <div id="dupa" class="row p-2 text-center">
+                            <h2 class="text-dark">Użytkownicy bez rezerwacji:</h2>
+                            {% for user in usersWithoutTable %}
+                                <div class="col-auto">
+                                    <div class="m-1">
+                                        <div id="{{ user.id }}dupa" draggable="true" ondragstart="drag(event)"  class="list-group-item" style="font-size: 0.8rem; {%if user.isWithPerson() %} background: #202428; color: #ffffff {% else %} background: #ffffff; color: #202428{% endif %}">{{ user.getFirstName }} {{ user.getLastName }} {{ user.email }}</div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    {% for table in tables %}
+                        <div class="m-2 p-0 col" style="width: 150px">
+                            <div class="bg-dark text-white list-group-item text-center p-2 m-0" ondrop="drop(event, {{ table.id }})"  ondragover="allowDrop(event)" style="font-size: 0.8rem">{{ table.name }} ({{ table.size }} / 10)</div>
+                            <div id="{{ table.id }}" class="list-group list-group-flush text-center h-100" ondrop="drop(event, {{ table.id }})"  ondragover="allowDrop(event)">
+                                {% for user in table.getUser|sort|reverse %}
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <div id="{{ user.id }}dupa" draggable="true" ondragstart="drag(event)"  class="list-group-item" style="font-size: 0.8rem; {%if user.isWithPerson() %} background: #202428; color: #ffffff {% else %} background: #ffffff; color: #202428{% endif %}">{{ user.getFirstName }} {{ user.getLastName }} {{ user.email }}</div>
+                                    {% endif %}
+                                {% endfor %}
+                                <div style="width: 10rem">
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            {% endif %}
+            <!-- end admin section -->
+        </div>
+    </main>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+
+        function getUlChildrenIds(ulId) {
+            const parent = document.getElementById(ulId);
+
+            const children = Array.from(parent.children);
+
+            const ids = children.map(element => {
+                return element.id;
+            });
+
+            ids.shift()
+
+            const values = {
+                usersId: ids
+            };
+
+            console.log(values);
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev, tableId, userId) {
+            ev.preventDefault();
+            let table = document.getElementById(tableId)
+            let data = ev.dataTransfer.getData("text");
+            table.appendChild(document.getElementById(data))
+
+            const xhr = new XMLHttpRequest();
+            const url = "/admin/table/" + tableId + "/user/" + data.slice(0, -4)
+            xhr.open('POST', url)
+            xhr.send()
+            xhr.onreadystatechange=(e)=>{
+                window.location.reload()
+            }
+        }
+
+        function dropRemoveUserTable(ev) {
+            ev.preventDefault();
+            let table = document.getElementById("dupa")
+            let data = ev.dataTransfer.getData("text");
+            table.appendChild(document.getElementById(data))
+
+            const xhr = new XMLHttpRequest();
+            const url = "/admin/remove/user/" + data.slice(0, -4)
+            xhr.open('POST', url)
+            xhr.send()
+            xhr.onreadystatechange=(e)=>{
+                window.location.reload()
+            }
+        }
+
+        function makeReservation(tableId) {
+            const xhr = new XMLHttpRequest();
+            const url = "/user/table/" + tableId
+            xhr.open('POST', url)
+            xhr.send()
+            xhr.onreadystatechange=(e)=>{
+                window.location.reload()
+            }
+        }
+
+        function removeReservation(tableId) {
+            const xhr = new XMLHttpRequest();
+            const url = "/user/remove/table/" + tableId
+            xhr.open('POST', url)
+            xhr.send()
+            xhr.onreadystatechange=(e)=>{
+                window.location.reload()
+            }
+        }
+
+    </script>
+{% endblock %}

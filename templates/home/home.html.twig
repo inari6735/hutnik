@@ -1,25 +1,49 @@
 {% extends 'core_base.html.twig' %}
 
 {% block title %}Strona główna{% endblock %}
-{% block mystyles %}
-    <style>
-        #nv1 {
-            color: #fff;
-            border-bottom-color: #fff;
-        }
-    </style>
-{% endblock %}
 
 {% block body %}
-    <main class="px-5 mt-5">
-        <div class="card border border-5 border-dark rounded-5 bg-dark align-items-center">
-            <a href="{{ url('app_table') }}">
-                <img class="border-5 border-white border rounded-5 mb-2 mt-2" src="{{ asset('images/home_background.png') }}" alt="" width="600">
-            </a>
+    <main>
+
+        <div class="container pt-5">
+            <div class="row">
+                <div class="container-fluid text-center w-100">
+                    <a href="{{ url('app_table') }}">
+                        <img class="img-height img-fluid" src="{{ asset('images/home_background.png') }}" alt="" >
+                    </a>
+                </div>
+
+            </div>
+            <div class="row w-100 h-25 justify-content-center">
+                <div class="col-12 mt-5" style="width: 16rem;">
+                    <a class="fancy" href="{{ url('app_table') }}" >
+                        <span class="top-key"></span>
+                        <span class="text button-text-size">Zajmij miejsce</span>
+                        <span class="bottom-key-1"></span>
+                        <span class="bottom-key-2"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+{#    <main class="px-5 mt-5">#}
+{#        <div class="card border border-5 border-dark rounded-5 bg-dark align-items-center">#}
+{#            <a href="{{ url('app_table') }}">#}
+{#                <img class="border-5 border-white border rounded-5 mb-2 mt-2" src="{{ asset('images/home_background.png') }}" alt="" width="600">#}
+{#            </a>#}
 {#            <p class="lead p-2 text-white">Bal jest okazją do wspólnych spotkań i rozmów, ale przede wszystkim do wspólnej zabawy, która potrwa do samego rana. Piękne Panie, eleganccy Panowie, super muzyka, to tylko początek zapowiedzi tej noworocznej imprezy.</p>#}
 {#            <p class="lead">#}
 {#                <a href="{{ url('app_table') }}" class="btn btn-lg btn-secondary fw-bold border-dark bg-white text-dark">Zajmij miejsce</a>#}
 {#            </p>#}
-        </div>
-    </main>
+{#        </div>#}
+{#    </main>#}
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $('.carousel').carousel({
+            interval: 2000
+        })
+    </script>
 {% endblock %}

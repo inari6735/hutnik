@@ -2,21 +2,14 @@
 
 {% block title %}Dostęp{% endblock %}
 
-{% block mystyles %}
-    <style>
-        #nv2 {
-            color: #fff;
-            border-bottom-color: #fff;
-        }
-    </style>
-{% endblock %}
 
 {% block body %}
-    <main class="px-3">
-        <table class="table text-white">
+    <main>
+
+        <table class="table text-dark text-size-custom">
             <thead>
                 <tr>
-                    <td class="pt-5">
+                    <td class="pt-5 text-center">
                         Email
                     </td>
                 </tr>
@@ -24,9 +17,9 @@
             <tbody>
             {% for email in emails %}
                 <tr>
-                    <td class="text-white">
-                        {{ email.email }} {% if email.getWithPerson() %}<a class="text-warning text-decoration-none">+1</a>{% endif %}
-                        <a class="link-danger text-decoration-none" href="{{ url('app_admin_email_remove', {'emailId': email.id}) }}">-</a>
+                    <td class="text-dark text-center">
+                        {{ email.email }} {% if email.getWithPerson() %}<a class="text-decoration-none" style="color: #ffc107">+1</a>{% endif %}
+                        <a class="link-danger text-decoration-none" href="{{ url('app_admin_email_remove', {'emailId': email.id}) }}">{{ source('svg/bin.svg') }}</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -34,8 +27,8 @@
                 <td>
                     <form action="{{ url('app_admin_email_add') }}">
                         <div class="form-floating m-0 text-center">
-                            <input placeholder="email" id="floatingInput" class="text-white border-0 form-control" style="background: none; text-align: center" type="text" name="email">
-                            <label class="text-center text-white w-100" for="floatingInput">Dodaj nowy email</label>
+                            <input placeholder="email" id="floatingInput" class="text-dark border-0 form-control" style="background: none; text-align: center" type="text" name="email">
+                            <label class="text-center text-dark w-100" for="floatingInput">Dodaj nowy email</label>
                         </div>
                     </form>
                 </td>
@@ -44,7 +37,7 @@
 
             <thead class="mt-5">
             <tr>
-                <td class="pt-5">
+                <td class="pt-5 text-center text-dark">
                     Adresy email nieprzypisane do żadnego konta
                 </td>
             </tr>
@@ -52,7 +45,7 @@
             <tbody>
                 {% for unregisteredEmail in unregisteredEmails %}
                     <tr>
-                        <td class="text-white">
+                        <td class="text-dark text-center">
                             {{ unregisteredEmail.email }}
                         </td>
                     </tr>

@@ -6,42 +6,42 @@
     {{ form_start(registrationForm) }}
         <!-- Pills content -->
         <div class="container-fluid align-content-center justify-content-center">
-            <div class="row d-flex justify-content-center align-content-center">
+            <div class="row d-flex justify-content-center align-content-center row-height">
                 <div class="col-6">
                     <div class="tab-content align-content-center">
                         <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
 
                             <div class="container-fluid mt-0 mb-5 justify-content-center align-items-center">
                                 <div class="row-cols-auto mt-5 justify-content-center align-items-center text-center">
-                                    <div class="col-auto align-content-center align-items-center">
-                                        <h1 class="text-light" style="font-size: 3em">Rejestracja</h1>
+                                    <div class="col-auto align-content-center align-items-center fnt-size">
+                                        <h1 class="text-dark" style="font-size: 3em">Rejestracja</h1>
                                     </div>
 
                                 </div>
 
                             </div>
                             {% if emailError %}
-                                <div class="alert alert-danger">Nie można zarejestrować, prawdopodobnie twój email nie istnieje w systemie</div>
+                                <div class="alert alert-danger fnt-size">Nie można zarejestrować, prawdopodobnie twój email nie istnieje w systemie</div>
                             {% endif %}
 
 
                             <!-- Email input -->
-                            <div class="mb-4 text-light">
+                            <div class="mb-4 text-dark fnt-size">
                                 {{ form_row(registrationForm.email) }}
                             </div>
 
                             <!-- Password input -->
-                            <div class="mb-4 text-light">
+                            <div class="mb-4 text-dark fnt-size">
                                 {{ form_row(registrationForm.plainPassword, {
                                     label: 'Hasło'
                                 }) }}
                             </div>
 
-                            <div class="mb-4 text-light">
+                            <div class="mb-4 text-dark fnt-size">
                                 {{ form_row(registrationForm.first_name) }}
                             </div>
 
-                            <div class="mb-4 text-light">
+                            <div class="mb-4 text-dark fnt-size">
                                 {{ form_row(registrationForm.last_name) }}
                             </div>
 
@@ -51,12 +51,12 @@
                             <!-- Submit button -->
                             <div class="row">
                                 <div class="col-auto w-100 pt-3">
-                                    <button type="submit" class="btn btn-light btn-block mb-4 w-100">Zarejestruj się</button>
+                                    <button type="submit" class="btn btn-dark btn-block mb-4 w-100 fnt-size">Zarejestruj się</button>
                                 </div>
                             </div>
 
                             <!-- Register buttons -->
-                            <div class="text-center text-light">
+                            <div class="text-center text-dark fnt-size">
                                 <p>Masz już konto? <a href="{{ url('app_login') }}" style="text-decoration: none; color: #0084ff">Logowanie</a></p>
                             </div>
                         </div>

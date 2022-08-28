@@ -6,10 +6,12 @@
     <link rel="icon" href="{{ asset('images/favicon.png') }}">
     {% block mystyles %}
     {% endblock %}
+
     {% block stylesheets %}
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-        <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/cover/">
         <link rel="stylesheet" href="{{ asset('css/cover.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/home_button.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/reservation_button.css') }}">
     {% endblock %}
     {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
     {#        {% block stylesheets %}#}
@@ -18,39 +20,62 @@
 
     {% block javascripts %}
         {#            {{ encore_entry_script_tags('app') }}#}
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
     {% endblock %}
 
 </head>
-<body class="bg-dark" >
+<body>
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-    <div class="d-flex vh-100 text-center text-white bg-dark">
-
-        <div class="cover-container d-flex w-100 p-3 mx-auto flex-column">
-            <header class="mb-auto">
-                <div>
-                    {% if app.user %}
-                        <a style="font-size: 1.17em" href="{{ url('app_user') }}" class="float-md-start mb-0 pt-2 text-decoration-none text-white fw-bold">{{ app.user.getFirstName() }} {{ app.user.getLastName() }} {% if app.user.isWithPerson() %} +1 {% endif %}</a>
-                    {% endif %}
-
-                    <nav class="nav nav-masthead justify-content-center float-md-end">
-                        <a id="nv1" class="nav-link fw-bold py-1 px-0" aria-current="page" href="{{ url('app_home') }}">Home</a>
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <a id="nv2" class="nav-link fw-bold py-1 px-0" href="{{ url('app_admin_email') }}">Dostęp</a>
-                        {% endif %}
-                        <a id="nv3" class="nav-link fw-bold py-1 px-0" aria-current="page" href="{{ url('app_information') }}">Informacje</a>
-                        <a id="nv4" class="nav-link fw-bold py-1 px-0" href="{{ url('app_contact') }}">Kontakt</a>
-                        <a id="nv5" class="nav-link fw-bold py-1 px-0" href="{{ path('app_logout') }}">Wyloguj się</a>
-                    </nav>
-                </div>
-            </header>
-            {% block body %}{% endblock %}
-            <footer class="mt-auto text-white-50">
-                <p></p>
-            </footer>
-        </div>
-
-    </div>
+        <nav class="navbar">
+            <ul class="navbar-nav">
+                {% if app.user %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('app_user') }}">
+                        {{ source('svg/user.svg') }}
+                        <span class="link-text">{{ app.user.getFirstName() }} {{ app.user.getLastName() }} {% if app.user.isWithPerson() %} +1 {% endif %}</span>
+                    </a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('app_home') }}">
+                        {{ source('svg/home.svg') }}
+                        <span class="link-text">Home</span>
+                    </a>
+                </li>
+                {% if is_granted('ROLE_ADMIN') %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('app_admin_email') }}">
+                        {{ source('svg/access.svg') }}
+                        <span class="link-text">Dostęp</span>
+                    </a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('app_information') }}">
+                        {{ source('svg/info.svg') }}
+                        <span class="link-text">Informacje</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('app_contact') }}">
+                        {{ source('svg/contact.svg') }}
+                        <span class="link-text">Kontakt</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_logout') }}">
+                        {{ source('svg/log_out.svg') }}
+                        <span class="link-text" style="width: 100px">Wyloguj się</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        {% block body %}{% endblock %}
+        <footer class="mt-auto text-white-50">
+            <p></p>
+        </footer>
     {% endif %}
 </body>
 </html>
