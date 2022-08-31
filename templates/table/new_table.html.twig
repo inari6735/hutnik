@@ -12,6 +12,7 @@
             </div>
             <!-- user section -->
             {% if is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN') %}
+
             {% if myUser.getUserTable() %}
                 <div class="row text-center">
                     <div class="col mt-5 p-4 text-light" style="background: #44CF6C; font-family: 'Ropa Sans', sans-serif; font-weight: bold;">
@@ -41,6 +42,13 @@
                 {% endfor %}
             </div>
             {% endif %}
+            <div class="container-fluid pt-3 mt-3">
+                <div class="row justify-content-center">
+                    <div class="col-6 text-center">
+                        <p><span style="color: #DC0073">UWAGA!</span> Rozkład stolików jest rozkładem wstępnym i może ulec zmianie bliżej wydarzenia. Organizatorzy zastrzegają sobie prawo do możliwości przesadzenia uczestników w celu pełnego obsadzenia stołów.</p>
+                    </div>
+                </div>
+            </div>
             <!-- end user section -->
 
             <!-- admin section -->
