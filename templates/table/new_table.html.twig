@@ -31,11 +31,11 @@
                     <div class="col pt-3">
                         <div class="button-borders">
                             {% if myUser.getUserTable.id is defined and myUser.getUserTable.id == table.id %}
-                                <button class="primary-button" style="background: #44CF6C;" onclick="removeReservation({{ table.id }})">{{ table.name }} ({{ 10 - table.size }}/10)</button>
+                                <button class="primary-button p-4" style="background: #44CF6C;" onclick="removeReservation({{ table.id }})">{{ table.name }} ({{ 10 - table.size }}/10)</button>
                             {% elseif table.size > 0 and not (table.size == 1 and myUser.isWithPerson == 1) %}
-                                <button class="primary-button" onclick="makeReservation({{ table.id }})">{{ table.name }} ({{ 10 - table.size }}/10)</button>
+                                <button class="primary-button p-4" onclick="makeReservation({{ table.id }})">{{ table.name }} ({{ 10 - table.size }}/10)</button>
                             {% else %}
-                                <button class="primary-button" style="background: #FF4655;">{{ table.name }} ({{ 10 - table.size }}/10)</button>
+                                <button class="primary-button p-4" style="background: #FF4655;">{{ table.name }} ({{ 10 - table.size }}/10)</button>
                             {% endif %}
                         </div>
                     </div>
